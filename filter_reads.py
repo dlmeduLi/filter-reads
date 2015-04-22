@@ -6,9 +6,7 @@ import re
 import sys
 import os
 import os.path
-import subprocess
 from optparse import OptionParser
-import shelve
 import pysam
 import csv
 
@@ -16,23 +14,6 @@ import csv
 
 mdRe = re.compile('^[0-9]+(([A-Z]|\^[A-Z]+)[0-9]+)*$')
 mdTagRe = re.compile('[0-9]+|\^[A-Z]+|[A-Z]')
-
-# Sort SAM file with system sort program
-# sed -i '/^@/d;/!^@/q' file
-
-def SortSamFile(inputFile, outputFile):
-	if(not os.path.exists(inputFile)):
-		return False
-
-	# Extract the header of the input SAM file
-
-	os.system('sed -n \'/^@/p;/^[^@]/q\' ' + inputFile + ' > ' + outputFile)
-
-	# Remove the header in the temp file
-
-	os.system('sed -n \'/^@/d;/^[^@]/p\' ' + inputFile + ' | sort >> ' + outputFile)
-	
-	return True
 
 # Count file lines
 
@@ -42,38 +23,7 @@ def opcount(fname):
 			pass
 	return i + 1
 
-# Get the qname tag
-
-def QNameKey(qname, keyRe):
-	key = qname
-	if keyRe :
-		if(keyRe.match(qname)):
-			tags = keyRe.findall(key)
-			if(len(tags) > 0):
-				key = ''
-				if(type(tags[0]) is str):
-					key = tags[0]
-				elif(type(tags[0]) is tuple):
-					for s in tags[0] :
-						key += s
-	return key
-
-# Calculate the key an alignment
-# The algrithm should make sure that one key identify one unique read
-
-def AlignmentKey(alignment, keyRe):
-	# Get the tag of QNAME without read number
-	key = QNameKey(alignment.qname, keyRe)
-
-	if(alignment.flag & 0x40):
-		key += (':' + str(alignment.pos) + ':' + str(alignment.pnext))
-	elif(alignment.flag & 0x80):
-		key += (':' + str(alignment.pnext) + ':' + str(alignment.pos))
-
-	return key
-
-def AlignmentGroupKey(alignment, keyRe):
-	return QNameKey(alignment.qname, keyRe)
+# Get alignment unmatched bases
 
 def GetUnmatchList(seq, cigar, md):
 	um = []
@@ -113,8 +63,6 @@ def GetUnmatchList(seq, cigar, md):
 	except IndexError:
 		return []
 
-	# print(seq)
-	# print(refseq)
 	return um
 
 def main():
