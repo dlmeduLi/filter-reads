@@ -174,7 +174,11 @@ def main():
 			percentage = 0
 		else:
 			percentage = lineCount * 1.0 / totalLineCount
-		sys.stdout.write('\r  read %ld (%.2f%%)' % (lineCount, percentage * 100))
+		sys.stdout.write('\r  read %ld (%.2f%%), (%s: %ld, %s: %ld, %s: %ld)' 
+						% (lineCount, percentage * 100, 
+							os.path.basename(outputSamFile1), writtenLineCount1, 
+							os.path.basename(outputSamFile2), writtenLineCount2, 
+							os.path.basename(outputSamFile), writtenLineCount))
 		sys.stdout.flush()
 
 	sys.stdout.write('\r  read %ld (%.2f%%)' % (lineCount, 100))
