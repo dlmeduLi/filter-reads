@@ -102,9 +102,10 @@ def main():
 
 	print('* Initializing...')
 
-	outputSamFile = "uncertain.sam"
-	outputSamFile1 = os.path.splitext(os.path.basename(snpFileName1))[0] + '.sam'
-	outputSamFile2 = os.path.splitext(os.path.basename(snpFileName2))[0] + '.sam'
+	samBaseName = os.path.splitext(os.path.basename(samFileName))[0]
+	outputSamFile = samBaseName + '.uncertain.sam'
+	outputSamFile1 = samBaseName + '.' + os.path.splitext(os.path.basename(snpFileName1))[0] + '.sam'
+	outputSamFile2 = samBaseName + '.' + os.path.splitext(os.path.basename(snpFileName2))[0] + '.sam'
 
 	samfile = pysam.AlignmentFile(samFileName, 'r')
 	outSam = pysam.AlignmentFile(outputSamFile, 'wh', template = samfile, text = samfile.text)
@@ -135,7 +136,7 @@ def main():
 	print('* Processing...')
 	for read in samfile.fetch():
 
-		if (not read.has_tag) :
+		if (not read.has_tag('MD')) :
 			outSam.write(read)
 			writtenLineCount += 1
 			continue
@@ -174,11 +175,8 @@ def main():
 			percentage = 0
 		else:
 			percentage = lineCount * 1.0 / totalLineCount
-		sys.stdout.write('\r  read %ld (%.2f%%), (%s: %ld, %s: %ld, %s: %ld)' 
-						% (lineCount, percentage * 100, 
-							os.path.basename(outputSamFile1), writtenLineCount1, 
-							os.path.basename(outputSamFile2), writtenLineCount2, 
-							os.path.basename(outputSamFile), writtenLineCount))
+		sys.stdout.write('\r  read %ld (%.2f%%), (1: %ld, 2: %ld, u: %ld)' 
+						% (lineCount, percentage * 100, writtenLineCount1, writtenLineCount2, writtenLineCount))
 		sys.stdout.flush()
 
 	sys.stdout.write('\r  read %ld (%.2f%%)' % (lineCount, 100))
