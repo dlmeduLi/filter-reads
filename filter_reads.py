@@ -234,13 +234,13 @@ def main():
 		snp2Percent = 0.0
 		undtPercent = 0.0
 	else:
-		snp1Percent = writtenLineCount1 / readCount
-		snp2Percent = writtenLineCount2 / readCount
-		undtPercent = writtenLineCount / readCount
+		snp1Percent = writtenLineCount1 * 1.0 / readCount
+		snp2Percent = writtenLineCount2 * 1.0 / readCount
+		undtPercent = writtenLineCount * 1.0 / readCount
 	stats = '  %ld reads (%.2f%%) written to %s.\n  %ld reads (%.2f%%) written to %s.\n  %ld reads (%.2f%%) written to %s. \n  total: %ld reads.' % (
-			writtenLineCount, undtPercent * 100, os.path.basename(outputSamFile),
-		  	writtenLineCount1, snp1Percent * 100, os.path.basename(outputSamFile1),
-		  	writtenLineCount2, snp2Percent * 100, os.path.basename(outputSamFile2),
+			writtenLineCount, undtPercent * 100.0, os.path.basename(outputSamFile),
+		  	writtenLineCount1, snp1Percent * 100.0, os.path.basename(outputSamFile1),
+		  	writtenLineCount2, snp2Percent * 100.0, os.path.basename(outputSamFile2),
 		  	readCount)
 	print(stats)
 	logfile.write(stats)
