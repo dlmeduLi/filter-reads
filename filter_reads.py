@@ -14,6 +14,7 @@ import csv
 
 mdRe = re.compile('^[0-9]+(([A-Z]|\^[A-Z]+)[0-9]+)*$')
 mdTagRe = re.compile('[0-9]+|\^[A-Z]+|[A-Z]')
+pairKeyRe = re.compile('(.*)\s[1-2](.*)')
 
 # Count file lines
 
@@ -103,7 +104,7 @@ def main():
 	print('* Initializing...')
 
 	samBaseName = os.path.splitext(os.path.basename(samFileName))[0]
-	outputSamFile = samBaseName + '.uncertain.sam'
+	outputSamFile = samBaseName + '.undetermined.sam'
 	outputSamFile1 = samBaseName + '.' + os.path.splitext(os.path.basename(snpFileName1))[0] + '.sam'
 	outputSamFile2 = samBaseName + '.' + os.path.splitext(os.path.basename(snpFileName2))[0] + '.sam'
 
@@ -133,8 +134,31 @@ def main():
 	for row in csvSnp2 :
 		snp2['chr' + str(row[0]) + ':' + str(row[1]) + ':' + str(row[2])] = row[3]
 
+	# build pair tables
+
+	pairSnp1 = {}
+	pairSnp2 = {}
+
 	print('* Processing...')
 	for read in samfile.fetch():
+
+		pairKey = ''.join(pairKeyRe.findall(read.qname)[0])
+
+		# look up pair tables
+
+		if(pairKey in pairSnp1):
+			outSam1.write(read)
+			writtenLineCount1 += 1
+			pairSnp1.pop(pairKey, None)
+			continue
+
+		if(pairKey in pairSnp2):
+			outSam2.write(read)
+			writtenLineCount2 += 1
+			pairSnp2.pop(pairKey, None)
+			continue
+			
+		# split
 
 		if (not read.has_tag('MD')) :
 			outSam.write(read)
@@ -143,28 +167,42 @@ def main():
 
 		unmatches = GetUnmatchList(read.seq, read.cigar, read.get_tag('MD'))
 		chrname = samfile.getrname(read.rname)
-		basepos = read.pos
+		basepos = read.pos + 1 # the returned pos is 0 based
 
 		# select alignments 
 
-		found = False
+		issnp1 = False
+		issnp2 = False
 		for um in unmatches :
 			key = chrname + ':' + str(um[0] + basepos) + ':' + um[1]
 
-			# look up table snp1
+			# look up snp tables
 
-			if((key in snp1) and (snp1[key] == um[2])):
+			issnp1 = ((key in snp1) and (snp1[key] == um[2]))
+			issnp2 = ((key in snp2) and (snp2[key] == um[2]))
+
+			if(issnp1 and (not issnp2)):
 				outSam1.write(read)
 				writtenLineCount1 += 1
-				found = True
+
+				# store pair key
+
+				if(read.is_paired):
+					pairSnp1[pairKey] = True
+
 				break
-			elif((key in snp2) and (snp2[key] == um[2])):
+			elif(issnp2 and (not issnp1)):
 				outSam2.write(read)
 				writtenLineCount2 += 1
-				found = True
-				break 
+				
+				# store pair key
+
+				if(read.is_paired):
+					pairSnp2[pairKey] = True
+
+				break
 		
-		if(not found):
+		if((not issnp1) and (not issnp2)):
 			outSam.write(read)
 			writtenLineCount += 1
 
@@ -175,8 +213,9 @@ def main():
 			percentage = 0
 		else:
 			percentage = lineCount * 1.0 / totalLineCount
-		sys.stdout.write('\r  read %ld (%.2f%%), (1: %ld, 2: %ld, u: %ld)' 
-						% (lineCount, percentage * 100, writtenLineCount1, writtenLineCount2, writtenLineCount))
+		sys.stdout.write('\r  read %ld (%.2f%%), (snp1: %ld, snp2: %ld, undt: %ld)' 
+						% (lineCount, percentage * 100, 
+						writtenLineCount1, writtenLineCount2, writtenLineCount))
 		sys.stdout.flush()
 
 	sys.stdout.write('\r  read %ld (%.2f%%)' % (lineCount, 100))
