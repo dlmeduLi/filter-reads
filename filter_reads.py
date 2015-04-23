@@ -71,14 +71,6 @@ def main():
 	
 	usage = 'usage: %prog [options] input.sam snp1.csv snp2.csv'
 	parser = OptionParser(usage=usage, version='%prog version 0.0.1')
-	
-	# parser.add_option('-o', '--output-file', dest='outputfile',
-	# 					help='write the result to output file')
-	# parser.add_option('-s', '--sort', 
-	# 					action="store_true", dest="sort", default=False,
-	# 					help='sort the input SAM file before further processing')
-	# parser.add_option('-k', '--key-reg', dest="keyreg",
-	# 					help='qname regular expression to extract the alignment key')
 
 	(options, args) = parser.parse_args()
 	if(len(args) != 3):
