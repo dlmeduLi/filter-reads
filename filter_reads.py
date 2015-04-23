@@ -222,10 +222,19 @@ def main():
 	outSam2.close()
 
 	print('\n* Complete')
-	print('  %ld reads written to %s.\n  %ld reads written to %s.\n  %ld reads written to %s.' 
-		  % (writtenLineCount, os.path.basename(outputSamFile),
-		  	 writtenLineCount1, os.path.basename(outputSamFile1),
-		  	 writtenLineCount2, os.path.basename(outputSamFile2)))
+	readCount = writtenLineCount + writtenLineCount1 + writtenLineCount2
+	if(readCount == 0):
+		snp1Percent = 0.0
+		snp2Percent = 0.0
+		undtPercent = 0.0
+	else:
+		snp1Percent = writtenLineCount1 / readCount
+		snp2Percent = writtenLineCount2 / readCount
+		undtPercent = writtenLineCount / readCount
+	print('  %ld reads (%.2f%%) written to %s.\n  %ld reads (%.2f%%) written to %s.\n  %ld reads (%.2f%%) written to %s.' 
+		  % (writtenLineCount, undtPercent * 100, os.path.basename(outputSamFile),
+		  	 writtenLineCount1, snp1Percent * 100, os.path.basename(outputSamFile1),
+		  	 writtenLineCount2, snp2Percent * 100, os.path.basename(outputSamFile2)))
 
 
 if __name__ == '__main__':
