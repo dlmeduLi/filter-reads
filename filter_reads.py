@@ -79,7 +79,7 @@ def main():
 
 	samFileName = args[0]
 	snpFileName1 = args[1]
-	snpFileName2 = args[2] 
+	snpFileName2 = args[2]
 
 	if(not os.path.exists(samFileName)):
 		print('error: Failed to open file "', samFileName, '"')
@@ -99,11 +99,17 @@ def main():
 	outputSamFile = samBaseName + '.undetermined.sam'
 	outputSamFile1 = samBaseName + '.' + os.path.splitext(os.path.basename(snpFileName1))[0] + '.sam'
 	outputSamFile2 = samBaseName + '.' + os.path.splitext(os.path.basename(snpFileName2))[0] + '.sam'
+	logFileName = samBaseName + '.log'
 
 	samfile = pysam.AlignmentFile(samFileName, 'r')
 	outSam = pysam.AlignmentFile(outputSamFile, 'wh', template = samfile, text = samfile.text)
 	outSam1 = pysam.AlignmentFile(outputSamFile1, 'wh', template = samfile, text = samfile.text)
 	outSam2 = pysam.AlignmentFile(outputSamFile2, 'wh', template = samfile, text = samfile.text)
+	try:
+		logfile = open(logFileName, 'w')
+	except IOError:
+		print('error: create log file failed!')
+		sys.exit(-1)
 
 	totalLineCount = opcount(samFileName)
 	print('  %ld lines.' % totalLineCount)
@@ -205,12 +211,12 @@ def main():
 			percentage = 0
 		else:
 			percentage = lineCount * 1.0 / totalLineCount
-		sys.stdout.write('\r  read %ld (%.2f%%), (snp1: %ld, snp2: %ld, undt: %ld)' 
+		sys.stdout.write('\r  read #%ld (%.2f%%), (snp1: %ld, snp2: %ld, undt: %ld)' 
 						% (lineCount, percentage * 100, 
 						writtenLineCount1, writtenLineCount2, writtenLineCount))
 		sys.stdout.flush()
 
-	sys.stdout.write('\r  read %ld (%.2f%%)' % (lineCount, 100))
+	sys.stdout.write('\r  read #%ld (%.2f%%)' % (lineCount, 100))
 	sys.stdout.flush()
 	
 	samfile.close()
@@ -231,11 +237,14 @@ def main():
 		snp1Percent = writtenLineCount1 / readCount
 		snp2Percent = writtenLineCount2 / readCount
 		undtPercent = writtenLineCount / readCount
-	print('  %ld reads (%.2f%%) written to %s.\n  %ld reads (%.2f%%) written to %s.\n  %ld reads (%.2f%%) written to %s.' 
-		  % (writtenLineCount, undtPercent * 100, os.path.basename(outputSamFile),
-		  	 writtenLineCount1, snp1Percent * 100, os.path.basename(outputSamFile1),
-		  	 writtenLineCount2, snp2Percent * 100, os.path.basename(outputSamFile2)))
-
+	stats = '  %ld reads (%.2f%%) written to %s.\n  %ld reads (%.2f%%) written to %s.\n  %ld reads (%.2f%%) written to %s. \n  total: %ld reads.' % (
+			writtenLineCount, undtPercent * 100, os.path.basename(outputSamFile),
+		  	writtenLineCount1, snp1Percent * 100, os.path.basename(outputSamFile1),
+		  	writtenLineCount2, snp2Percent * 100, os.path.basename(outputSamFile2),
+		  	readCount)
+	print(stats)
+	logfile.write(stats)
+	logfile.close()
 
 if __name__ == '__main__':
 	main()
