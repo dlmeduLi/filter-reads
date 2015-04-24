@@ -1,0 +1,267 @@
+{
+  "title": "A Read",
+  "id": 1,
+  "formatVersion": 2,
+  "ideas": {
+    "1": {
+      "title": "Get covered 129 SNPs\nGet covered cast SNPs\nGet mismatched bases\n",
+      "id": 2,
+      "ideas": {
+        "1": {
+          "title": "covered by 129 SNPs: No \ncovered by cast SNPs: Yes\n",
+          "id": 3,
+          "ideas": {
+            "1": {
+              "title": "has mismatches: No",
+              "id": 7,
+              "ideas": {
+                "1": {
+                  "title": "129",
+                  "id": 14,
+                  "attr": {
+                    "style": {
+                      "background": "#3366ff"
+                    }
+                  }
+                }
+              }
+            },
+            "2": {
+              "title": "has mismatches: Yes",
+              "id": 8,
+              "ideas": {
+                "1": {
+                  "title": "mismatches in cast SNPs: Yes",
+                  "id": 15,
+                  "ideas": {
+                    "1": {
+                      "title": "cast",
+                      "id": 17,
+                      "attr": {
+                        "style": {
+                          "background": "#008000"
+                        }
+                      }
+                    }
+                  }
+                },
+                "2": {
+                  "title": "mismatches in cast SNPs: No",
+                  "id": 16,
+                  "ideas": {
+                    "1": {
+                      "title": "Undermined",
+                      "id": 18,
+                      "attr": {
+                        "style": {
+                          "background": "#ff0000"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "attr": {
+            "position": [
+              163.5,
+              -465,
+              2
+            ],
+            "style": {}
+          }
+        },
+        "2": {
+          "title": "covered by 129 SNPs: Yes\ncovered by cast SNPs: No\n",
+          "id": 4,
+          "ideas": {
+            "1": {
+              "title": "has mismatches: No",
+              "id": 9,
+              "ideas": {
+                "1": {
+                  "title": "cast",
+                  "id": 22,
+                  "attr": {
+                    "style": {
+                      "background": "#008000"
+                    }
+                  }
+                }
+              }
+            },
+            "2": {
+              "title": "has mismatches: Yes",
+              "id": 10,
+              "ideas": {
+                "1": {
+                  "title": "mismatches in 129 SNPs: Yes",
+                  "id": 20,
+                  "attr": {
+                    "style": {}
+                  },
+                  "ideas": {
+                    "1": {
+                      "title": "129",
+                      "id": 21,
+                      "attr": {
+                        "style": {
+                          "background": "#3366ff"
+                        }
+                      }
+                    }
+                  }
+                },
+                "2": {
+                  "title": "mismatches in 129 SNPs: No",
+                  "id": 19,
+                  "ideas": {
+                    "1": {
+                      "title": "Undermined",
+                      "attr": {
+                        "style": {
+                          "background": "#ff0000"
+                        }
+                      },
+                      "id": 23
+                    }
+                  },
+                  "attr": {
+                    "style": {}
+                  }
+                }
+              }
+            }
+          },
+          "attr": {
+            "style": {}
+          }
+        },
+        "3": {
+          "title": "covered by 129 SNPs: Yes\ncovered by cast SNPs: Yes",
+          "id": 5,
+          "ideas": {
+            "1": {
+              "title": "has mismatches: No",
+              "id": 11,
+              "ideas": {
+                "1": {
+                  "title": "Undermined",
+                  "attr": {
+                    "style": {
+                      "background": "#ff0000"
+                    }
+                  },
+                  "id": 25
+                }
+              }
+            },
+            "2": {
+              "title": "has mismatches: Yes",
+              "id": 12,
+              "ideas": {
+                "1": {
+                  "title": "mismatches in 129 SNPs: Yes\nmismatches in cast SNPs: No\n",
+                  "id": 26,
+                  "ideas": {
+                    "1": {
+                      "title": "129",
+                      "attr": {
+                        "style": {
+                          "background": "#3366ff"
+                        }
+                      },
+                      "id": 28
+                    }
+                  }
+                },
+                "2": {
+                  "title": "mismatches in cast SNPs: Yes\nmismatches in 129 \nSNPs:  No",
+                  "id": 27,
+                  "ideas": {
+                    "1": {
+                      "title": "cast",
+                      "attr": {
+                        "style": {
+                          "background": "#008000"
+                        }
+                      },
+                      "id": 29
+                    }
+                  }
+                },
+                "3": {
+                  "title": "mismatches in 129 SNPs: Yes\nmismatches in cast SNPs: Yes",
+                  "ideas": {
+                    "1": {
+                      "title": "Undermined",
+                      "attr": {
+                        "style": {
+                          "background": "#ff0000"
+                        }
+                      },
+                      "id": 42
+                    }
+                  },
+                  "id": 31,
+                  "attr": {
+                    "style": {}
+                  }
+                },
+                "4": {
+                  "title": "mismatches in 129 SNPs: No\nmismatches in cast SNPs: No\n",
+                  "attr": {
+                    "style": {}
+                  },
+                  "ideas": {
+                    "1": {
+                      "title": "Undermined",
+                      "attr": {
+                        "style": {
+                          "background": "#ff0000"
+                        }
+                      },
+                      "id": 43
+                    }
+                  },
+                  "id": 40
+                }
+              }
+            }
+          },
+          "attr": {
+            "style": {}
+          }
+        },
+        "4": {
+          "title": "covered by 129 SNPs: No \ncovered by cast SNPs: No\n",
+          "id": 6,
+          "ideas": {
+            "1": {
+              "title": "Undermined",
+              "id": 13,
+              "attr": {
+                "style": {
+                  "background": "#ff0000"
+                }
+              }
+            }
+          },
+          "attr": {
+            "position": [
+              171.5,
+              355,
+              3
+            ],
+            "style": {}
+          }
+        }
+      },
+      "attr": {
+        "style": {}
+      }
+    }
+  },
+  "links": []
+}

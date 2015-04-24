@@ -66,6 +66,14 @@ def GetUnmatchList(seq, cigar, md):
 
 	return um
 
+def IsUnmatchesInSnps(unmatches, snps, chrname, basepos):
+	for um in unmatches:
+		key = chrname + ':' + str(um[0] + basepos)
+		value =  um[1] + ':' + um[2]
+		if((key in snps) and (value == snps[key])):
+			return True
+	return False
+
 def main():
 	# parse the command line options
 	
@@ -124,13 +132,13 @@ def main():
 	snp1 = {}
 	csvSnp1 = csv.reader(open(snpFileName1))
 	for row in csvSnp1 :
-		snp1['chr' + str(row[0]) + ':' + str(row[1]) + ':' + str(row[2])] = row[3]																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																
+		snp1['chr' + str(row[0]) + ':' + str(row[1])] = row[2] + ':' + row[3]																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																
 	
 	print('  loading SNP data file \"%s\" ...' % (os.path.basename(snpFileName2)))
 	snp2 = {}
 	csvSnp2 = csv.reader(open(snpFileName2))
 	for row in csvSnp2 :
-		snp2['chr' + str(row[0]) + ':' + str(row[1]) + ':' + str(row[2])] = row[3]
+		snp2['chr' + str(row[0]) + ':' + str(row[1])] = row[2] + ':' + row[3]
 
 	# build pair tables
 
@@ -155,31 +163,110 @@ def main():
 			writtenLineCount2 += 1
 			pairSnp2.pop(pairKey, None)
 			continue
-			
-		# split
 
-		if (not read.has_tag('MD')) :
-			outSam.write(read)
-			writtenLineCount += 1
-			continue
-
-		unmatches = GetUnmatchList(read.seq, read.cigar, read.get_tag('MD'))
 		chrname = samfile.getrname(read.rname)
 		basepos = read.pos + 1 # the returned pos is 0 based
 
-		# select alignments 
+		# Get the read covered SNPS
 
-		issnp1 = False
-		issnp2 = False
-		for um in unmatches :
-			key = chrname + ':' + str(um[0] + basepos) + ':' + um[1]
+		coveredSnp1 = {}
+		coveredSnp2 = {}
+		refPoses = read.get_reference_positions()
+		for pos in refPoses:
+			posKey = chrname + ':' + str(pos)
+			if(posKey in snp1):
+				coveredSnp1[posKey] = snp1[posKey]
+			if(posKey in snp2):
+				coveredSnp2[posKey] = snp2[posKey]
+		hasCoveredSnp1 = (len(coveredSnp1) > 0)
+		hasCoveredSnp2 = (len(coveredSnp2) > 0)
 
-			# look up snp tables
+		# Get Mismatches
 
-			issnp1 = ((key in snp1) and (snp1[key] == um[2]))
-			issnp2 = ((key in snp2) and (snp2[key] == um[2]))
+		unmatches = GetUnmatchList(read.seq, read.cigar, read.get_tag('MD'))
+		hasUnmatches = (len(unmatches) > 0)
 
-			if(issnp1 and (not issnp2)):
+		isUnmatchesInSnp1 = IsUnmatchesInSnps(unmatches, coveredSnp1, chrname, basepos)
+		isUnmatchesInSnp2 = IsUnmatchesInSnps(unmatches, coveredSnp2, chrname, basepos)
+
+		# Split Strategy
+
+		if((not hasCoveredSnp1) and (not hasCoveredSnp2)):
+			
+			# Undetermined
+			
+			outSam.write(read)
+		 	writtenLineCount += 1
+
+		elif((hasCoveredSnp1) and (not hasCoveredSnp2)):
+			if(not hasUnmatches):
+				
+				# read is Snp2
+
+				outSam2.write(read)
+				writtenLineCount2 += 1
+
+				# store pair key
+
+				if(read.is_paired):
+					pairSnp2[pairKey] = True
+
+			else:
+				if(isUnmatchesInSnp1):
+
+					# read is Snp1
+
+					outSam1.write(read)
+					writtenLineCount1 += 1
+
+					# store pair key
+
+					if(read.is_paired):
+						pairSnp1[pairKey] = True
+
+				else:
+
+					# Undetermined
+
+					outSam.write(read)
+					writtenLineCount += 1
+
+		elif((not hasCoveredSnp1) and hasCoveredSnp2):
+			if(not hasUnmatches):
+
+				# read is Snp1
+
+				outSam1.write(read)
+				writtenLineCount1 += 1
+
+				# store pair key
+
+				if(read.is_paired):
+					pairSnp1[pairKey] = True
+			else:
+				if(isUnmatchesInSnp2):
+
+					# read is Snp2
+
+					outSam2.write(read)
+					writtenLineCount2 += 1
+
+					# store pair key
+
+					if(read.is_paired):
+						pairSnp2[pairKey] = True
+				else:
+
+					# Undetermined
+
+					outSam.write(read)
+					writtenLineCount += 1
+
+		elif(hasCoveredSnp1 and hasCoveredSnp2):
+			if(isUnmatchesInSnp1 and (not isUnmatchesInSnp2)):
+
+				# read is Snp1
+
 				outSam1.write(read)
 				writtenLineCount1 += 1
 
@@ -188,21 +275,23 @@ def main():
 				if(read.is_paired):
 					pairSnp1[pairKey] = True
 
-				break
-			elif(issnp2 and (not issnp1)):
+			elif((not isUnmatchesInSnp1) and isUnmatchesInSnp2):
+
+				# read is Snp2
+
 				outSam2.write(read)
 				writtenLineCount2 += 1
-				
+
 				# store pair key
 
 				if(read.is_paired):
 					pairSnp2[pairKey] = True
+			else:
 
-				break
-		
-		if((not issnp1) and (not issnp2)):
-			outSam.write(read)
-			writtenLineCount += 1
+				# Undetermined
+
+				outSam.write(read)
+				writtenLineCount += 1
 
 		# progress 
 
