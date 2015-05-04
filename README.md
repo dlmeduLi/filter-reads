@@ -34,6 +34,6 @@ alt: Alternative base
 
 ## *.mup files
 
-*.mup files illustrate the underline algorithms the script uses, they can be opened with [https://www.mindmup.com](https://www.mindmup.com) an on-line mind storm editor.
+*.mup files illustrate the underlying algorithms the script uses, they can be opened with [https://www.mindmup.com](https://www.mindmup.com) an on-line mind storm editor.
 
 
