@@ -15,6 +15,8 @@ import csv
 mdRe = re.compile('^[0-9]+(([A-Z]|\^[A-Z]+)[0-9]+)*$')
 mdTagRe = re.compile('[0-9]+|\^[A-Z]+|[A-Z]')
 pairKeyRe = re.compile('(.*)\s[1-2](.*)')
+tagCTRe = re.compile('.*CT.*')
+tagGARe = re.compile('.*GA.*')
 
 # Count file lines
 
@@ -198,6 +200,9 @@ def main():
 
 		chrname = samfile.getrname(read.rname)
 		pairKey = ''.join(pairKeyRe.findall(read.qname)[0])
+		tagXB = read.get_tag('XB')
+		isCT = tagCTRe.match(tagXB)
+		isGA = tagGARe.match(tagXB)
 
 		# look up pair tables
 
@@ -225,8 +230,17 @@ def main():
 		for pos in refPoses:
 			posKey = chrname + ':' + str(pos + 1)
 			if(posKey in dataSnp1):
+				snp = dataSnp1[posKey]
+				if isCT and (snp == 'C:T' or snp == 'T:C'):
+					continue
+				elif isGA and (snp == 'G:A' or snp == 'A:G'):
+					continue
 				dictCoveredSnp1[posKey] = dataSnp1[posKey]
 			if(posKey in dataSnp2):
+				if isCT and (snp == 'C:T' or snp == 'T:C'):
+					continue
+				elif isGA and (snp == 'G:A' or snp == 'A:G'):
+					continue
 				dictCoveredSnp2[posKey] = dataSnp2[posKey]
 
 		isCoveredSnp1 = (len(dictCoveredSnp1) > 0)
